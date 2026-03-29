@@ -181,3 +181,51 @@ async def extract(linkstr: str, prompt: str, drive_service) -> dict:
 # extract("https://drive.google.com/open?id=1A1HRUMNNYU0jj7NiY-hW38dOtt9pqYf3",prompt_Inter_CBSE)
 
 # extract("https://drive.google.com/open?id=1Ow_5CWffrdOwvSQcmY5-n3GQYrDqbKmZ",prompt_SSC_Inter)
+
+import io
+import json
+from models.StudentModel import Student
+
+async def extract_entire_student_profile(pdf_bytes: bytes):
+    # 1. Turn the uploaded PDF into images (You already have this)
+    images = convert_from_bytes(pdf_bytes, dpi=200)
+    
+    # 2. Get your 80-field list as a JSON template
+    # This tells Gemini exactly what keys we need (Name, DOB, m1, m2, etc.)
+    schema = Student.model_json_schema()
+    
+    # 3. Create the Super Prompt
+    # We combine your teammates' logic (SSC, Inter, Aadhar) into one big instruction
+    master_prompt = f"""
+    You are an AI Registrar. Look at these student documents and extract all details.
+    
+    RETURN DATA IN THIS JSON FORMAT:
+    {json.dumps(schema, indent=2)}
+    
+    USE THESE SPECIFIC RULES FOR DATA:
+    - 10th/SSC: Look for Board, School, and CGPA.
+    - 12th/Inter: Identify if it is CBSE or State. Map marks to m1, m2, m3, m4, p1, p2, ch1, ch2.
+    - Identity: Extract Aadhaar Number and Gender.
+    - Marks Mapping: M1-M4 are Maths, P1-P2 are Physics, C1-C2 are Chemistry.
+    
+    RULES:
+    - If a field is not found in the images, return "".
+    - Return ONLY the raw JSON object. No conversational text.
+    """
+
+    # 4. Call Gemini (Using your teammate's process_image_with_gemini logic)
+    # We send ALL pages of the PDF as a list
+    response_text = process_image_with_gemini(images, master_prompt)
+    
+    # 5. Clean and Validate
+    try:
+        # Remove any markdown backticks if Gemini adds them
+        clean_json = response_text.strip().removeprefix("```json").removesuffix("```").strip()
+        
+        # This converts the text into your actual 80-field Student object
+        validated_data = Student.model_validate_json(clean_json)
+        return validated_data
+        
+    except Exception as e:
+        print(f"Error parsing JSON: {e}")
+        return {"error": "Failed to parse data", "raw": response_text}

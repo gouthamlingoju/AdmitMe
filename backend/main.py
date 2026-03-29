@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from GoogleService import get_drive_service, get_sheets_service
 from config.settings import FRONTEND_URL
-from routers import auth, students, sync
+from routers import auth, students, sync, extraction
 from services.notification_service import register_connection, remove_connection
 import logging
 
@@ -48,6 +48,7 @@ app.add_middleware(
 app.include_router(auth.router, tags=["Authentication"])
 app.include_router(students.router, tags=["Students"])
 app.include_router(sync.router, tags=["Sync"])
+app.include_router(extraction.router, prefix="/api")
 
 @app.get("/")
 def read_root():
