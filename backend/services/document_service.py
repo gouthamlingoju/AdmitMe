@@ -21,6 +21,11 @@ LEGACY_DOC_FIELD_MAP = {
     "twelfth_memo": "twelfth_memo_link",
     "jee_rank_card": "jee_rank_card_link",
     "eapcet_rank_card": "eapcet_rank_card_link",
+    "candidate_pic": "candidate_pic",
+}
+
+ALLOWED_DOC_TYPES = set(LEGACY_DOC_FIELD_MAP.keys()) | {
+    "entrance_hallticket",
 }
 
 ALLOWED_UPLOAD_MIME_TYPES = {"application/pdf", "image/png", "image/jpeg"}
@@ -38,7 +43,7 @@ def _normalize_student_record(student: dict[str, Any]) -> dict[str, Any]:
 
 def normalize_doc_type(doc_type: str) -> str:
     normalized = (doc_type or "").strip().lower().replace(" ", "_")
-    if normalized not in LEGACY_DOC_FIELD_MAP:
+    if normalized not in ALLOWED_DOC_TYPES:
         raise ValueError(f"Unsupported document type: {doc_type}")
     return normalized
 
