@@ -30,6 +30,8 @@ class StudentApplicationRequest(BaseModel):
     twelfth_or_diploma_specialization: Optional[str] = ""
     eapcet_ht_no: Optional[str] = ""
     eapcet_rank: Optional[str] = ""
+    pgcet_ht_no: Optional[str] = ""
+    pgcet_rank: Optional[str] = ""
     jee_ht_no: Optional[str] = ""
     jee_mains_rank: Optional[str] = ""
 

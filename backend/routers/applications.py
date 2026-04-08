@@ -115,6 +115,8 @@ async def _create_application_core(
         "twelfth_or_diploma_specialization": payload.twelfth_or_diploma_specialization,
         "eapcet_ht_no": payload.eapcet_ht_no,
         "eapcet_rank": payload.eapcet_rank,
+        "pgcet_ht_no": getattr(payload, 'pgcet_ht_no', None),
+        "pgcet_rank": getattr(payload, 'pgcet_rank', None),
         "jee_ht_no": payload.jee_ht_no,
         "jee_mains_rank": payload.jee_mains_rank,
         "mother_tongue": payload.mother_tongue,

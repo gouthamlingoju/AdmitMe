@@ -10,4 +10,7 @@ alter table students2025
   add column ph_type text,
   add column tenth_studied_area_pincode text,
   add column twelfth_studied_area_pincode text,
-  add column twelfth_or_diploma_specialization text;
+  add column twelfth_or_diploma_specialization text,
+  add column pgcet_ht_no text,
+  add column pgcet_rank text,
+  add column pgcet_rank_card_link text;

@@ -21,6 +21,7 @@ LEGACY_DOC_FIELD_MAP = {
     "twelfth_memo": "twelfth_memo_link",
     "jee_rank_card": "jee_rank_card_link",
     "eapcet_rank_card": "eapcet_rank_card_link",
+    "pgcet_rank_card": "pgcet_rank_card_link",
     "candidate_pic": "candidate_pic",
 }
 
